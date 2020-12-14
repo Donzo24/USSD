@@ -2,7 +2,8 @@
 
 namespace App\Ussd;
 
-use App\Models\{Utilisateur};
+use App\Models\{Utilisateur, Calendrier, Consultation};
+use Carbon\Carbon;
 
 /**
  * 
@@ -16,6 +17,7 @@ class UssdMenu
 	protected $response;
 	protected $user;
 	protected $check;
+	protected $data;
 	
 	function __construct($data)
 	{
@@ -159,16 +161,54 @@ class UssdMenu
 			//Langue alerte
 			$this->setUserTempVariable();
 
+			$this->makeCalendar();
+
 		}elseif ($this->level == "1-1-2") {
 			//prochaine consultation
+
 		}elseif ($this->level == "1-1-3") {
 			//date acouchement
+			if
 		}
 	}
 
 	public function contains($reg)
 	{
 		return preg_match($reg, $this->level);
+	}
+
+	public function makeCalendar()
+	{
+		$var = explode(";", $this->user->temp_variable);
+
+		$derniere = $var[1];
+		$duree = $var[2];
+		$lang = $var[3];
+
+		$diff = ceil($duree/2);
+
+		$derniere_regle = Carbon::createFromFormat('d/m/Y', $derniere);
+
+		$conception = Carbon::createFromFormat('d/m/Y', $derniere)->subDays($diff);
+		$accouchement = Carbon::createFromFormat('d/m/Y', $derniere)->subDays($diff)->add(9, 'month');
+
+		$calendrier = Calendrier::create([
+			'date_derniere_regle' => $derniere_regle->format('Y-m-d'),
+			'date_debut' => $conception->format('Y-m-d'),
+			'date_fin' => $accouchement->format('Y-m-d'),
+			'duree_cycle' => $duree,
+			'phase_lutuale' => 20,
+			'id_utilisateur' => $this->user->id_utilisateur
+		]);
+
+		$periode = \Carbon\CarbonPeriod::create($conception->format('Y-m-d'), '1 month', $accouchement->format('Y-m-d'));
+
+		foreach ($periode as $key => $period) {
+			Consultation::create([
+				'date_consultation' => $period->format('Y-m-d'),
+				'id_calendrier' => $calendrier->id_calendrier
+			]);
+		}
 	}
 }
 
