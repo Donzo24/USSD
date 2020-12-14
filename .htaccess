@@ -4,6 +4,7 @@ php_value upload_max_filesize 30M
 AddType text/cache-manifest .appcache
 
 <IfModule mod_rewrite.c>
+    php_value short_open_tag 0
     RewriteEngine On
     RewriteRule ^(.*)$ public/$1 [L]
 </IfModule>
