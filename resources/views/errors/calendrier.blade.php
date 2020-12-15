@@ -3,6 +3,6 @@
   	<meta name="nav" content="end"/>
 </head>
   	<body>
-		Aucune inscription
+		Desoler, vous n'avez aucun calendrier de consultation valide en cours
   </body>
 </html>

@@ -20,9 +20,8 @@ Route::any('/', function(Request $request) {
 
 	$ussd = new UssdMenu($request);
 
-	//dd($ussd->getMenu());
 	try {
-		return view($ussd->getMenu());
+		return view($ussd->getMenu(), $ussd->getData());
 	} catch (\InvalidArgumentException $e) {
 		return view('errors.index');
 	}

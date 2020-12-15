@@ -17,7 +17,7 @@ class UssdMenu
 	protected $response;
 	protected $user;
 	protected $check;
-	protected $data;
+	protected $data = [];
 	
 	function __construct($data)
 	{
@@ -37,6 +37,11 @@ class UssdMenu
 		$this->user = Utilisateur::firstOrCreate([
 			'telephone' => $this->msisdn
 		]);
+	}
+
+	public function getData()
+	{
+		return $this->data;
 	}
 
 	public function isNewSession()
@@ -165,9 +170,40 @@ class UssdMenu
 
 		}elseif ($this->level == "1-1-2") {
 			//prochaine consultation
+			$calendrier = $this->user->calendriers()->orderBy('id_calendrier', 'DESC')->limit(1);
+
+			if ($calendrier->exists()) {
+
+				$consultations = $calendrier->first()->consultations()->limit(1);
+
+				if ($consultations->exists()) {
+					
+					$this->data = [
+						'date' => Carbon::parse($consultations->first()->date_consultation)->locale('fr_FR')->isoFormat('LL')
+					];
+
+				}else{
+					$this->level = 'errors.calendrier';
+				}
+				
+			}else{
+				$this->level = 'errors.calendrier';
+			}
 
 		}elseif ($this->level == "1-1-3") {
 			//date acouchement
+			$calendrier = $this->user->calendriers()->orderBy('id_calendrier', 'DESC')->limit(1);
+
+			if ($calendrier->exists()) {
+
+				$calendrier = $calendrier->first();
+
+				$this->data = [
+					'date' => Carbon::parse($calendrier->date_fin)->locale('fr_FR')->isoFormat('LL')
+				];
+			}else{
+				$this->level = 'errors.calendrier';
+			}
 		}
 	}
 

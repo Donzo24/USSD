@@ -4,6 +4,6 @@
 </head>
   	<body>
 		Votre accouchement est prevu le <br/>
-		15/07/2021
+		{{ $date }}
   </body>
 </html>

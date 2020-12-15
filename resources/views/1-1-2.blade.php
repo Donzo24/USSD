@@ -4,6 +4,6 @@
 </head>
   	<body>
 		Votre prochaine consultation est prevu le <br/>
-		06/01/2021
+		{{ $date }}
   </body>
 </html>
