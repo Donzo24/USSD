@@ -4,7 +4,7 @@
     <title>Souscription suivi prenatal</title>
   </head>
   <body> 
-  	{{ __('Veuillez entrez la duree de votre cycle') }}<br/>
+  	{{ __('Veuillez entrez la duree de votre cycle (Exp: 28)') }}<br/>
     <input type="text" name="response"/></form>
   </body>
 </html>

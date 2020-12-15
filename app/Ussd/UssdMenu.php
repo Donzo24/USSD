@@ -23,13 +23,13 @@ class UssdMenu
 	{
 		$this->request = $data;
 
-		$this->sessionId = $data->sessionId;
-		$this->msisdn = $data->msisdn;
-		$this->response = $data->has('response') ? $data->input('response'):null;
+		$this->sessionId = $data->sessionId; // Session id
+		$this->msisdn = $data->msisdn; // Telephone utilisateur
+		$this->response = $data->has('response') ? $data->input('response'):null; // Donnee utilisateur
 
-		$this->setUser();
+		$this->setUser(); // Definir le niveau de l'utilisateur
 
-		$this->initSession();
+		$this->initSession(); // initier la session
 	}
 
 	public function setUser()
